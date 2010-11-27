@@ -9,16 +9,104 @@
 #include <QPalette>
 #include <QBrush>
 #include <QInputDialog>
+#include <QGraphicsItemGroup>
+#include <QPainterPath>
+#include <QGraphicsItem>
+#include <QGraphicsScene>
+#include <QGraphicsEllipseItem>
+#include <QGraphicsLineItem>
+#include <QPen>
+#include <QColor>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->graphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     generateTable(5,2);
     connect(ui->btnGenerate,SIGNAL(clicked()),this,SLOT(updateEquations()));
     connect(ui->spnInputNum,SIGNAL(valueChanged(int)),this,SLOT(resizeTable()));
     connect(ui->spnOutputNum,SIGNAL(valueChanged(int)),this,SLOT(resizeTable()));
+
+    QGraphicsScene* scene = new QGraphicsScene(this);
+    ui->graphicsView->setScene(scene);
+
+
+
+    QColor gateColor("#7799FF");
+    gateColor.setAlpha(155);
+
+    QPen gatePen;
+    gatePen.setColor("#0000FF");
+    gatePen.setWidth(2);
+
+
+    QGraphicsEllipseItem* testItem = new QGraphicsEllipseItem;
+    testItem->setRect(10,10,10,10);
+    testItem->setBrush(gateColor);
+    testItem->setPen(gatePen);
+    QGraphicsEllipseItem* testItem2 = new QGraphicsEllipseItem;
+    testItem2->setRect(15,15,50,50);
+    testItem2->setBrush(gateColor);
+    testItem2->setPen(gatePen);
+
+    QGraphicsItemGroup* group = new QGraphicsItemGroup(); //scene->createItemGroup(scene.selecteditems());
+    group->addToGroup(testItem);
+    group->addToGroup(testItem2);
+
+    scene->addItem(group);
+    scene->addLine(0,0,50,50);
+
+    QGraphicsItemGroup* grid = new QGraphicsItemGroup();
+    QGraphicsLineItem* aLine;
+    QPalette aPalette;
+    QPen majorPen;
+    QColor majorColor(aPalette.background().color());
+    int darkOrBright = (aPalette.background().color().blue()-40 >0)?1:-1;
+    majorColor.setBlue(majorColor.blue()-(40*darkOrBright));
+    majorColor.setRed(majorColor.red()-(40*darkOrBright));
+    majorColor.setGreen(majorColor.green()-(40*darkOrBright));
+    majorPen.setColor(majorColor);
+
+    QPen minorPen;
+    QColor minorColor(aPalette.background().color());
+    minorColor.setBlue(minorColor.blue()-(10*darkOrBright));
+    minorColor.setRed(minorColor.red()-(10*darkOrBright));
+    minorColor.setGreen(minorColor.green()-(10*darkOrBright));
+    minorPen.setColor(minorColor);
+
+    for (int i=0; i<=1000;i+=10) {
+        if ((i%50)) {
+            aLine = new QGraphicsLineItem();
+            aLine->setLine(i,0,i,1000);
+            aLine->setPen(minorPen);
+            grid->addToGroup(aLine);
+        }
+    }
+    for (int i=0; i<=1000;i+=10) {
+        if ((i%50)) {
+            aLine = new QGraphicsLineItem();
+            aLine->setLine(0,i,1000,i);
+            aLine->setPen(minorPen);
+            grid->addToGroup(aLine);
+        }
+    }
+
+    for (int i=0; i<=1000;i+=50) {
+        aLine = new QGraphicsLineItem();
+        aLine->setLine(i,0,i,1000);
+        aLine->setPen(majorPen);
+        grid->addToGroup(aLine);
+    }
+    for (int i=0; i<=1000;i+=50) {
+        aLine = new QGraphicsLineItem();
+        aLine->setLine(0,i,1000,i);
+        aLine->setPen(majorPen);
+        grid->addToGroup(aLine);
+    }
+    scene->addItem(grid);
+    grid->setZValue(-1000);
 }
 
 MainWindow::~MainWindow()
@@ -68,7 +156,7 @@ void MainWindow::generateTable(uint input, uint output)
     for (int i =0; i< input+output;i++) {
         ui->tblTruthTest->setColumnWidth(i,40);
         QLineEdit* aLineEdit = new QLineEdit(this);
-        aLineEdit->setText({((char)i)+0x41}); //Little trick to make an alphebetical counter //TODO support more than 26 entry
+        aLineEdit->setText({((char)i)+0x41}); //Little trick to make an alphebetical counter
         aLineEdit->setStyleSheet("background-color:"+aPalette->button().color().name()+";margin:0px;spacing:0px;text-align:center;");
         ui->tblTruthTest->setCellWidget(0,i,aLineEdit);
     }
