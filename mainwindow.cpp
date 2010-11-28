@@ -17,6 +17,11 @@
 #include <QGraphicsLineItem>
 #include <QPen>
 #include <QColor>
+#include <QGraphicsPathItem>
+#include <QPainterPath>
+#include "andgate.h"
+#include "orgate.h"
+#include "input.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -32,31 +37,30 @@ MainWindow::MainWindow(QWidget *parent) :
     QGraphicsScene* scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
 
+    Input* testIn = new Input("test");
 
+    OrGate* aGate1 = new OrGate(this,2);
+    OrGate* aGate2 = new OrGate(this,2);
 
-    QColor gateColor("#7799FF");
-    gateColor.setAlpha(155);
+    AndGate* aGate3 = new AndGate(this,2);
+    AndGate* aGate4 = new AndGate(this,2);
 
-    QPen gatePen;
-    gatePen.setColor("#0000FF");
-    gatePen.setWidth(2);
+    aGate1->setPos(150,50);
+    aGate2->setPos(200,50);
+    aGate3->setPos(150,100);
+    aGate4->setPos(200,100);
 
+    scene->addItem(aGate1);
+    scene->addItem(aGate2);
+    scene->addItem(aGate3);
+    scene->addItem(aGate4);
+    scene->addItem(testIn);
 
-    QGraphicsEllipseItem* testItem = new QGraphicsEllipseItem;
-    testItem->setRect(10,10,10,10);
-    testItem->setBrush(gateColor);
-    testItem->setPen(gatePen);
-    QGraphicsEllipseItem* testItem2 = new QGraphicsEllipseItem;
-    testItem2->setRect(15,15,50,50);
-    testItem2->setBrush(gateColor);
-    testItem2->setPen(gatePen);
+    scene->addItem(connectGates(testIn,aGate1,false));
+    scene->addItem(connectGates(testIn,aGate1,true));
 
-    QGraphicsItemGroup* group = new QGraphicsItemGroup(); //scene->createItemGroup(scene.selecteditems());
-    group->addToGroup(testItem);
-    group->addToGroup(testItem2);
-
-    scene->addItem(group);
-    scene->addLine(0,0,50,50);
+    scene->addItem(connectGates(testIn,aGate3,false));
+    scene->addItem(connectGates(testIn,aGate3,true));
 
     QGraphicsItemGroup* grid = new QGraphicsItemGroup();
     QGraphicsLineItem* aLine;
@@ -218,4 +222,15 @@ void MainWindow::resizeTable()
 
     testTruthIn = ui->spnInputNum->value();
     testTruthOut = ui->spnOutputNum->value();
+}
+
+
+QGraphicsLineItem* MainWindow::connectGates(GateBase* gate1, GateBase* gate2, bool invert)
+{
+
+    QPoint point1 = QPoint(gate1->pos().x()+gate1->outputRelCoord().x(),gate1->pos().y()+gate1->outputRelCoord().y());
+    QPoint inputPoint = gate2->addInput(invert);
+    QPoint point2 = QPoint(gate2->pos().x()+inputPoint.x(),gate2->pos().y()+inputPoint.y());
+    QGraphicsLineItem* aLine = new QGraphicsLineItem(point1.x(),point1.y(),point2.x(),point2.y());
+    return aLine;
 }
