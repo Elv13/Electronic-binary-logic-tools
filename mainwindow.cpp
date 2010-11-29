@@ -18,6 +18,9 @@
 #include <QPen>
 #include <QColor>
 #include <QGraphicsPathItem>
+#include <QGraphicsRectItem>
+#include <QGraphicsSimpleTextItem>
+#include <QGraphicsProxyWidget>
 #include <QPainterPath>
 #include "andgate.h"
 #include "orgate.h"
@@ -111,6 +114,60 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     scene->addItem(grid);
     grid->setZValue(-1000);
+
+
+    //Logic simulator code
+    QGraphicsScene* analyserScene = new QGraphicsScene();
+    ui->graAnalyserData->setScene(analyserScene);
+    QGraphicsRectItem* sidePanel = new QGraphicsRectItem();
+    sidePanel->setRect(0,0,150,400);
+    QColor analiserSizeColor;
+    analiserSizeColor.setNamedColor("#999999");
+    sidePanel->setZValue(-100);
+    sidePanel->setBrush(analiserSizeColor);
+    analyserScene->addItem(sidePanel);
+
+    QGraphicsItemGroup* grid2 = new QGraphicsItemGroup();
+    grid2->setZValue(-200);
+    for (int i =150;i<2900;i+=75) {
+        QGraphicsLineItem* line = new QGraphicsLineItem(grid2);
+        line->setLine(i,25,i,399);
+        grid2->addToGroup(line);
+        QGraphicsSimpleTextItem* time = new QGraphicsSimpleTextItem(grid2);
+        time->setText(QString::number(i)+"ms");
+        time->setPos(i,5);
+        grid2->addToGroup(time);
+    }
+    analyserScene->addItem(grid2);
+
+    QGraphicsItemGroup* hGrid = new QGraphicsItemGroup();
+    for (int i =0;i<300;i+=30) {
+        QGraphicsLineItem* line = new QGraphicsLineItem(hGrid);
+        line->setLine(150,i,2000,i);
+        hGrid->addToGroup(line);
+        /*QGraphicsSimpleTextItem* time = new QGraphicsSimpleTextItem(grid2);
+        time->setText(QString::number(i)+"ms");
+        time->setPos(i,5);
+        grid2->addToGroup(time);*/
+    }
+    analyserScene->addItem(hGrid);
+
+    QGraphicsItemGroup* sideGroup = new QGraphicsItemGroup();
+    for (int i =0;i<300;i+=30) {
+        QGraphicsSimpleTextItem* time = new QGraphicsSimpleTextItem(sideGroup);
+        time->setText(QString::number(i));
+        time->setPos(20,i);
+        sideGroup->addToGroup(time);
+
+        QComboBox* cbbValue = new QComboBox();
+        QStringList valList;
+        valList << "0" << "1" << "X";
+        cbbValue->addItems(valList);
+        QGraphicsProxyWidget* cbbValueProxy = analyserScene->addWidget(cbbValue);
+        cbbValueProxy->setPos(80,i);
+        sideGroup->addToGroup(cbbValueProxy);
+    }
+    analyserScene->addItem(sideGroup);
 }
 
 MainWindow::~MainWindow()

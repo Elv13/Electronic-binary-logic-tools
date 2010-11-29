@@ -45,7 +45,7 @@
     <item>
      <widget class="QTabWidget" name="tabwMode">
       <property name="currentIndex">
-       <number>4</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabAnalyser">
        <attribute name="title">
@@ -91,7 +91,16 @@
          </layout>
         </item>
         <item>
-         <widget class="QGraphicsView" name="graAnalyserData"/>
+         <widget class="QGraphicsView" name="graAnalyserData">
+          <property name="sceneRect">
+           <rectf>
+            <x>0.000000000000000</x>
+            <y>0.000000000000000</y>
+            <width>3000.000000000000000</width>
+            <height>1100.000000000000000</height>
+           </rectf>
+          </property>
+         </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -301,8 +310,8 @@
        <attribute name="title">
         <string>Page</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_6">
-        <item>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0" rowspan="2" colspan="2">
          <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
            <widget class="QSpinBox" name="spnInputNum">
@@ -339,7 +348,7 @@
           </item>
          </layout>
         </item>
-        <item>
+        <item row="2" column="0">
          <widget class="QTableWidget" name="tblTruthTest">
           <property name="alternatingRowColors">
            <bool>true</bool>
@@ -349,32 +358,8 @@
           </attribute>
          </widget>
         </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_9">
-          <item>
-           <spacer name="horizontalSpacer_9">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnGenerate">
-            <property name="text">
-             <string>Generate circuit</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_10">
+        <item row="1" column="1" rowspan="3">
+         <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
            <widget class="QTextEdit" name="txtOutTest"/>
           </item>
@@ -396,6 +381,30 @@
             </property>
             <property name="dragMode">
              <enum>QGraphicsView::RubberBandDrag</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="3" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_9">
+          <item>
+           <spacer name="horizontalSpacer_9">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnGenerate">
+            <property name="text">
+             <string>Generate circuit</string>
             </property>
            </widget>
           </item>
