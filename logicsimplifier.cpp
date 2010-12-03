@@ -2,23 +2,23 @@
 
 #include <QHash>
 
-struct mergedTerms {
-   uint filter = 0;
+/*struct mergedTerms {
+   uint filter;
    QList<int> terms;
    uint filteredOneCount;
-}
+}*/
 
 LogicSimplifier::LogicSimplifier()
 {
 
 }
 
-QList<int> customSort(QHash<int,mergedTerms> &merged)
+/*QList<int> customSort(QHash<int,mergedTerms> &merged)
 {
     QList<int> toReturn;
 
     return toReturn;
-}
+}*/
 
 QString LogicSimplifier::guineMcCluskeySimplification(QList<uint> primeImplicant, QStringList inputName)
 {
@@ -30,7 +30,7 @@ QString LogicSimplifier::guineMcCluskeySimplification(QList<uint> primeImplicant
 //Faire une fonction sort 
 
     //Step 1: Group them by the number of 1
-    QHash<int, QList<int> > groups;
+    /*QHash<int, QList<int> > groups;
     foreach (int val,primeImplicant) {
         int numOfOne = 0;
         for (int i=1;i<=(1<<inputName.count());i<<1) {
@@ -49,11 +49,12 @@ QString LogicSimplifier::guineMcCluskeySimplification(QList<uint> primeImplicant
     for (int i=1;i<inputName.count()-1;i++) {
         foreach (int val, groups[i]) {
             foreach (int val2, groups[i+1]){
+//Don't forgot to remove the different bit before the next loop
                 merged[val].filter |= val ^ val2;
                 merged[val].terms << val2;
             }
         }
-    }
+    }*/
 
     //Step 3: Check for other passes
 

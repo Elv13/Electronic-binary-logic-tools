@@ -28,8 +28,10 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    scene(new QGraphicsScene(this))
 {
+    drawGate();
     ui->setupUi(this);
     ui->graphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     generateTable(5,2);
@@ -37,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->spnInputNum,SIGNAL(valueChanged(int)),this,SLOT(resizeTable()));
     connect(ui->spnOutputNum,SIGNAL(valueChanged(int)),this,SLOT(resizeTable()));
 
-    QGraphicsScene* scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
 
     Input* testIn = new Input("test");
@@ -173,6 +174,59 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::drawGate()
+{
+    QString testString("F=AB'C+A'B");
+    QStringList sum;
+    QString tmp;
+    QString output;
+
+    QHash<QString,Input*> inputs;
+    inputs["A"] = new Input("A");
+    inputs["B"] = new Input("B");
+    inputs["C"] = new Input("C");
+
+    inputs["A"]->setPos(250,50);
+    inputs["B"]->setPos(250,100);
+    inputs["C"]->setPos(250,150);
+
+    scene->addItem(inputs["A"]);
+    scene->addItem(inputs["B"]);
+    scene->addItem(inputs["C"]);
+
+    for (int i=0;i<testString.count();i++) {
+        if (testString[i] == '=') {
+            tmp = tmp.trimmed();
+            output = tmp;
+            tmp.clear();
+        }
+        else if (testString[i] == '+') {
+            tmp = tmp.trimmed();
+            sum << tmp;
+            tmp.clear();
+        }
+        else {
+            tmp += testString[i];
+        }
+    }
+    tmp = tmp.trimmed();
+    sum << tmp;
+    tmp.clear();
+
+//Could have some recursing here
+    int yOfsset = 0;
+    foreach(QString aSum,sum) {
+        AndGate* aGate3 = new AndGate(this,2);
+        aGate3->setPos(350,yOfsset+=50);
+        scene->addItem(aGate3);
+        for (int i=0;i<aSum.count();i++) {
+            if (aSum[i] != '\'')
+                scene->addItem(connectGates(inputs[ QString(aSum[i]) ],aGate3,(i < aSum.count() && aSum[i+1]!='\'')?false:true));
+        }
+    }
+
 }
 
 void MainWindow::generateTable(uint input, uint output)
