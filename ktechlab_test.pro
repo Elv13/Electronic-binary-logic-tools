@@ -20,3 +20,6 @@ SOURCES += andgate.cpp \
            orgate.cpp \
     input.cpp \
     circuitline.cpp
+
+RESOURCES += \
+    ressources.qrc

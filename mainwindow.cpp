@@ -36,6 +36,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
     drawGate();
     ui->setupUi(this);
+    ui->tabwMode->setVisible(false);
+    ui->frmAlgebra->setVisible(false);
+    ui->frmCircuit->setVisible(false);
+    ui->frmAnalyse->setVisible(false);
+    connect(ui->btnAlgebra,SIGNAL(clicked(bool)),this,SLOT(modeAlgebra()));
+    connect(ui->btnCircuit,SIGNAL(clicked(bool)),this,SLOT(modeCircuit()));
+    connect(ui->btnAnalyse,SIGNAL(clicked(bool)),this,SLOT(modeAnalyse()));
+    connect(ui->btnTruth,SIGNAL(clicked(bool)),this,SLOT(modeTruth()));
+
+    ui->verticalLayout_2->setContentsMargins(0,0,0,0);
     ui->graphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     generateTable(5,2);
     connect(ui->btnGenerate,SIGNAL(clicked()),this,SLOT(updateEquations()));
@@ -394,4 +404,54 @@ QGraphicsItemGroup* MainWindow::connectGates(GateBase* gate1, GateBase* gate2, b
     aGroup->addToGroup(aLine);*/
 
     return aGroup;
+}
+
+
+void MainWindow::modeTruth()
+{
+    ui->frmTruth->setVisible(true);
+    ui->frmAlgebra->setVisible(false);
+    ui->frmCircuit->setVisible(false);
+    ui->frmAnalyse->setVisible(false);
+
+    ui->btnAlgebra->setChecked(false);
+    ui->btnCircuit->setChecked(false);
+    ui->btnAnalyse->setChecked(false);
+}
+
+void MainWindow::modeAnalyse()
+{
+    ui->frmTruth->setVisible(false);
+    ui->frmAlgebra->setVisible(false);
+    ui->frmCircuit->setVisible(false);
+    ui->frmAnalyse->setVisible(true);
+
+    ui->btnTruth->setChecked(false);
+    ui->btnAlgebra->setChecked(false);
+    ui->btnCircuit->setChecked(false);
+}
+
+void MainWindow::modeCircuit()
+{
+    ui->frmTruth->setVisible(false);
+    ui->frmAlgebra->setVisible(false);
+    ui->frmCircuit->setVisible(true);
+    ui->frmAnalyse->setVisible(false);
+
+    ui->btnTruth->setChecked(false);
+    ui->btnAlgebra->setChecked(false);
+    ui->btnAnalyse->setChecked(false);
+}
+
+void MainWindow::modeAlgebra()
+{
+    ui->frmTruth->setVisible(false);
+    ui->frmAlgebra->setVisible(true);
+    ui->frmCircuit->setVisible(false);
+    ui->frmAnalyse->setVisible(false);
+
+    ui->btnTruth->setChecked(false);
+    ui->btnCircuit->setChecked(false);
+    ui->btnAnalyse->setChecked(false);
+    updateEquations();
 }

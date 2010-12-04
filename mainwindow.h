@@ -32,7 +32,10 @@ private:
 private slots:
     void updateEquations();
     void resizeTable();
-
+    void modeTruth();
+    void modeAnalyse();
+    void modeCircuit();
+    void modeAlgebra();
 };
 
 #endif // MAINWINDOW_H

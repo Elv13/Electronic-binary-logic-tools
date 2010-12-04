@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="sideIcon">
+    <file>applications-development.png</file>
+  </qresource>
+</RCC>
