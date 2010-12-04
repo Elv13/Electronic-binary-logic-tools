@@ -25,6 +25,7 @@
 #include "andgate.h"
 #include "orgate.h"
 #include "input.h"
+#include "circuitline.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -32,10 +33,6 @@ MainWindow::MainWindow(QWidget *parent) :
     scene(new QGraphicsScene(this))
 {
     QPalette aPalette;
-    linePen.setWidth(2);
-    QColor lineColor = aPalette.text().color();
-    lineColor.setAlpha(100);
-    linePen.setColor(lineColor);
 
     drawGate();
     ui->setupUi(this);
@@ -349,9 +346,14 @@ QGraphicsItemGroup* MainWindow::connectGates(GateBase* gate1, GateBase* gate2, b
     QPoint inputPoint = gate2->addInput(invert);
     uint preferedPos = gate1->pos().x()+gate1->outputRelCoord().x()  +  (((gate2->pos().x()+inputPoint.x())-gate1->pos().x())/4);//(inputPoint.x()-(gate1->pos().x()));///2 + 5;
     bool ok = true;
+
+    //TODO merge lines with the same sources when necessary
     while (true) {
-        foreach (QLine aLine, lineList) {
-            if ((aLine.x1() == preferedPos) || (aLine.x2() == preferedPos)) {
+        foreach (CircuitLine* aLine, lineList) {
+            if (aLine->m_gate1 == gate1) {
+                break;
+            }
+            else if ((aLine->line().x1() == preferedPos) || (aLine->line().x2() == preferedPos)) {
                 preferedPos +=10;
                 ok = false;
                 break;
@@ -371,20 +373,19 @@ QGraphicsItemGroup* MainWindow::connectGates(GateBase* gate1, GateBase* gate2, b
     QLine line1(point1,point2);
     QLine line2(point2,point3);
     QLine line3(point3,point4);
-    lineList << line1 << line2 << line3;
 
 
-    QGraphicsLineItem* ghLine1 = new QGraphicsLineItem(line1,aGroup);
+
+    CircuitLine* ghLine1 = new CircuitLine(line1,gate1,gate2,aGroup);
     aGroup->addToGroup(ghLine1);
-    ghLine1->setPen(linePen);
 
-    QGraphicsLineItem* gyLine = new QGraphicsLineItem(line2,aGroup);
+    CircuitLine* gyLine = new CircuitLine(line2,gate1,gate2,aGroup);
     aGroup->addToGroup(gyLine);
-    gyLine->setPen(linePen);
 
-    QGraphicsLineItem* ghLine2 = new QGraphicsLineItem(line3,aGroup);
+    CircuitLine* ghLine2 = new CircuitLine(line3,gate1,gate2,aGroup);
     aGroup->addToGroup(ghLine2);
-    ghLine2->setPen(linePen);
+
+    lineList << ghLine1 << gyLine << ghLine2;
 
     /*QPoint point1 = QPoint(gate1->pos().x()+gate1->outputRelCoord().x(),gate1->pos().y()+gate1->outputRelCoord().y());
     QPoint inputPoint = gate2->addInput(invert);

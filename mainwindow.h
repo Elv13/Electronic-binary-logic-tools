@@ -6,6 +6,7 @@
 #include <QLine>
 #include <QPen>
 #include "gatebase.h"
+#include "circuitline.h"
 
 namespace Ui {
     class MainWindow;
@@ -27,8 +28,7 @@ private:
     uint testTruthIn;
     uint testTruthOut;
     QGraphicsScene* scene;
-    QList<QLine> lineList;
-    QPen linePen;
+    QList<CircuitLine*> lineList;
 private slots:
     void updateEquations();
     void resizeTable();
