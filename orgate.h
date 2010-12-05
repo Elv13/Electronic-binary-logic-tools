@@ -13,7 +13,7 @@ public:
     explicit OrGate(QObject *parent = 0, uint inputCount = 2);
     virtual QPoint outputRelCoord();
     virtual QPoint addInput(bool invert = false);
-
+    virtual QString getEquation();
 private:
     virtual void createGate(uint inputCount);
     int inputCount;

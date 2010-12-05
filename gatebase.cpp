@@ -9,3 +9,9 @@ GateBase::GateBase(QObject *parent)
     gatePen.setColor("#0000FF");
     gatePen.setWidth(2);
 }
+
+QPoint GateBase::addParentGate(GateBase* gate, bool invert)
+{
+    parent << ParentGates({gate,invert,0});
+    return addInput(invert);
+}

@@ -4,6 +4,7 @@
 
 Input::Input(QString text)
 {
+    this->text=text;
     QPainterPath inputPath;
     inputPath.lineTo(35,0);
     inputPath.lineTo(50,15);
@@ -36,4 +37,9 @@ QPoint Input::outputRelCoord()
 QPoint Input::addInput(bool invert)
 {
 
+}
+
+QString Input::getEquation()
+{
+    return text;
 }

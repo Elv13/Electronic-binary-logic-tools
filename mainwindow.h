@@ -7,6 +7,7 @@
 #include <QPen>
 #include "gatebase.h"
 #include "circuitline.h"
+#include "equationeditor.h"
 
 namespace Ui {
     class MainWindow;
@@ -29,6 +30,7 @@ private:
     uint testTruthOut;
     QGraphicsScene* scene;
     QList<CircuitLine*> lineList;
+    EquationEditor* equationEditor;
 private slots:
     void updateEquations();
     void resizeTable();

@@ -41,3 +41,7 @@ QPoint AndGate::addInput(bool invert)
     inputCount++;
     return QPoint(0,(inputCount-1)*10);
 }
+
+QString AndGate::getEquation() {
+
+}

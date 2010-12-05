@@ -34,50 +34,29 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     QPalette aPalette;
 
-    drawGate();
     ui->setupUi(this);
+
+    equationEditor = new EquationEditor(ui->frmAlgebra);
+    ui->frmAlgebra->layout()->addWidget(equationEditor);
+
     ui->tabwMode->setVisible(false);
     ui->frmAlgebra->setVisible(false);
     ui->frmCircuit->setVisible(false);
     ui->frmAnalyse->setVisible(false);
+    ui->frmAdvancedCircuitSettings->setVisible(false);
     connect(ui->btnAlgebra,SIGNAL(clicked(bool)),this,SLOT(modeAlgebra()));
     connect(ui->btnCircuit,SIGNAL(clicked(bool)),this,SLOT(modeCircuit()));
     connect(ui->btnAnalyse,SIGNAL(clicked(bool)),this,SLOT(modeAnalyse()));
     connect(ui->btnTruth,SIGNAL(clicked(bool)),this,SLOT(modeTruth()));
-
     ui->verticalLayout_2->setContentsMargins(0,0,0,0);
+
     ui->graphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     generateTable(5,2);
     connect(ui->btnGenerate,SIGNAL(clicked()),this,SLOT(updateEquations()));
     connect(ui->spnInputNum,SIGNAL(valueChanged(int)),this,SLOT(resizeTable()));
     connect(ui->spnOutputNum,SIGNAL(valueChanged(int)),this,SLOT(resizeTable()));
 
-    ui->graphicsView->setScene(scene);
-
-    Input* testIn = new Input("test");
-
-    OrGate* aGate1 = new OrGate(this,2);
-    OrGate* aGate2 = new OrGate(this,2);
-
-    AndGate* aGate3 = new AndGate(this,2);
-    AndGate* aGate4 = new AndGate(this,2);
-
-    aGate1->setPos(150,50);
-    aGate2->setPos(200,50);
-    aGate3->setPos(150,100);
-    aGate4->setPos(200,100);
-
-    scene->addItem(aGate1);
-    scene->addItem(aGate2);
-    scene->addItem(aGate3);
-    scene->addItem(aGate4);
-    scene->addItem(testIn);
-
-    scene->addItem(connectGates(testIn,aGate1,false));
-    scene->addItem(connectGates(testIn,aGate1,true));
-
-    scene->addItem(connectGates(testIn,aGate3,false));
-    scene->addItem(connectGates(testIn,aGate3,true));
+    ui->graphicsView->setScene(scene);    
 
     QGraphicsItemGroup* grid = new QGraphicsItemGroup();
     QGraphicsLineItem* aLine;
@@ -196,7 +175,9 @@ void MainWindow::drawGate()
     QString output;
 
     QHash<QString,Input*> inputs;
-    inputs["A"] = new Input("A");
+
+    //TODO remove this, find why it crash
+    /*inputs["A"] = new Input("A");
     inputs["B"] = new Input("B");
     inputs["C"] = new Input("C");
 
@@ -206,38 +187,60 @@ void MainWindow::drawGate()
 
     scene->addItem(inputs["A"]);
     scene->addItem(inputs["B"]);
-    scene->addItem(inputs["C"]);
+    scene->addItem(inputs["C"]);*/
 
-    for (int i=0;i<testString.count();i++) {
-        if (testString[i] == '=') {
-            tmp = tmp.trimmed();
-            output = tmp;
-            tmp.clear();
+
+
+    int yInOfsset=50;
+    for (int i=0;i<ui->tblTruthTest->columnCount()-1;i++) {
+        qDebug() << "This is the text" << ((QLineEdit*)ui->tblTruthTest->cellWidget(0,i))->text();
+        QString inputName = ((QLineEdit*)ui->tblTruthTest->cellWidget(0,i))->text();
+        inputs[inputName] = new Input(inputName);
+        inputs[inputName]->setPos(0,yInOfsset*(i+1));
+        scene->addItem(inputs[inputName]);
+    }
+
+    //QStringList equations = ui->txtAlgebra->toPlainText().replace(QChar(0x2029),QString("\n")).split("\n");
+    //QStringList equations;
+    //equations << "F = A'B'CD'E + A'BCDE' + AB'C'D'E" << "G = A'BC'D'E + A'BC'DE' + A'BCD'E' + A'BCDE + ABCD'E' + ABCD'E";
+    QHash<QString, QString> equations = equationEditor->equationList();
+    foreach (QString anEquation,equations) {
+        qDebug() << "This is the equation: " << anEquation;
+        for (int i=0;i<anEquation.count();i++) {
+            output = equations.key(anEquation);
+            /*if (anEquation[i] == '=') {
+                tmp = tmp.trimmed();
+                output = tmp;
+                tmp.clear();
+            }
+            else */if (anEquation[i] == '+') {
+                tmp = tmp.trimmed();
+                sum << tmp;
+                tmp.clear();
+            }
+            else {
+                tmp += anEquation[i];
+            }
         }
-        else if (testString[i] == '+') {
-            tmp = tmp.trimmed();
-            sum << tmp;
-            tmp.clear();
-        }
-        else {
-            tmp += testString[i];
+
+        tmp = tmp.trimmed();
+        sum << tmp;
+        tmp.clear();
+
+        //Could have some recursing here
+        int yOfsset = 0;
+        foreach(QString aSum,sum) {
+            AndGate* aGate3 = new AndGate(this,2);
+            aGate3->setPos(150,yOfsset+=50);
+            scene->addItem(aGate3);
+            for (int i=0;i<aSum.count();i++) {
+                if (aSum[i] != '\'')
+                    scene->addItem(connectGates(inputs[ QString(aSum[i]) ],aGate3,(i < aSum.count() && aSum[i+1]!='\'')?false:true));
+            }
         }
     }
-    tmp = tmp.trimmed();
-    sum << tmp;
-    tmp.clear();
 
-//Could have some recursing here
-    int yOfsset = 0;
-    foreach(QString aSum,sum) {
-        AndGate* aGate3 = new AndGate(this,2);
-        aGate3->setPos(350,yOfsset+=50);
-        scene->addItem(aGate3);
-        for (int i=0;i<aSum.count();i++) {
-            if (aSum[i] != '\'')
-                scene->addItem(connectGates(inputs[ QString(aSum[i]) ],aGate3,(i < aSum.count() && aSum[i+1]!='\'')?false:true));
-        }
-    }
+
 
 }
 
@@ -353,7 +356,7 @@ QGraphicsItemGroup* MainWindow::connectGates(GateBase* gate1, GateBase* gate2, b
 
     QGraphicsItemGroup* aGroup = new QGraphicsItemGroup();
     QLine hLine1;
-    QPoint inputPoint = gate2->addInput(invert);
+    QPoint inputPoint = gate2->addParentGate(gate1,invert);
     uint preferedPos = gate1->pos().x()+gate1->outputRelCoord().x()  +  (((gate2->pos().x()+inputPoint.x())-gate1->pos().x())/4);//(inputPoint.x()-(gate1->pos().x()));///2 + 5;
     bool ok = true;
 
@@ -441,6 +444,8 @@ void MainWindow::modeCircuit()
     ui->btnTruth->setChecked(false);
     ui->btnAlgebra->setChecked(false);
     ui->btnAnalyse->setChecked(false);
+    updateEquations();
+
 }
 
 void MainWindow::modeAlgebra()
@@ -454,4 +459,5 @@ void MainWindow::modeAlgebra()
     ui->btnCircuit->setChecked(false);
     ui->btnAnalyse->setChecked(false);
     updateEquations();
+    drawGate();
 }

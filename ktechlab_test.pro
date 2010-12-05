@@ -10,7 +10,8 @@ INCLUDEPATH += .
 # Input
 HEADERS += andgate.h gatebase.h logicsimplifier.h mainwindow.h orgate.h \
     input.h \
-    circuitline.h
+    circuitline.h \
+    equationeditor.h
 FORMS += mainwindow.ui
 SOURCES += andgate.cpp \
            gatebase.cpp \
@@ -19,7 +20,8 @@ SOURCES += andgate.cpp \
            mainwindow.cpp \
            orgate.cpp \
     input.cpp \
-    circuitline.cpp
+    circuitline.cpp \
+    equationeditor.cpp
 
 RESOURCES += \
     ressources.qrc

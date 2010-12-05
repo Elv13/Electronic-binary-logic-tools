@@ -57,7 +57,7 @@
 padding-bottom:0px;
 margin-top:0px;
 margin-bottom:0px;
-spacing-top:0px;</string>
+spacing:0px;</string>
         </property>
         <property name="text">
          <string>Truth Table</string>
@@ -96,7 +96,7 @@ spacing-top:0px;</string>
 padding-bottom:0px;
 margin-top:0px;
 margin-bottom:0px;
-spacing-top:0px;</string>
+spacing:0px;</string>
         </property>
         <property name="text">
          <string>Algebra</string>
@@ -132,7 +132,7 @@ spacing-top:0px;</string>
 padding-bottom:0px;
 margin-top:0px;
 margin-bottom:0px;
-spacing-top:0px;</string>
+spacing:0px;</string>
         </property>
         <property name="text">
          <string>Analyse</string>
@@ -162,6 +162,13 @@ spacing-top:0px;</string>
           <width>80</width>
           <height>70</height>
          </size>
+        </property>
+        <property name="styleSheet">
+         <string>padding-top:0px;
+padding-bottom:0px;
+margin-top:0px;
+margin-bottom:0px;
+spacing:0px;</string>
         </property>
         <property name="text">
          <string>Circuit</string>
@@ -476,6 +483,84 @@ spacing-top:0px;</string>
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="btnCircuitSettings">
+         <property name="text">
+          <string>Settings</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frmAdvancedCircuitSettings">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="QLabel" name="lblAndIn">
+            <property name="text">
+             <string>Maximum &quot;and&quot; input</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="spnAnd"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lblOrIn">
+            <property name="text">
+             <string>Maximum &quot;or&quot; input</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="spnOr"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="lblXorIn">
+            <property name="text">
+             <string>Maximum &quot;xor&quot; input</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QSpinBox" name="spnXor"/>
+          </item>
+          <item row="3" column="0" colspan="2">
+           <widget class="QCheckBox" name="ckbPropDelay">
+            <property name="toolTip">
+             <string>Usually create bigger and slower circuit, but necessary in some situations. If you don't know what this is about, don't check this box.</string>
+            </property>
+            <property name="whatsThis">
+             <string>Usually create bigger and slower circuit, but necessary in some situations. If you don't know what this is about, don't check this box.</string>
+            </property>
+            <property name="text">
+             <string>Take propagation delay into account</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <spacer name="horizontalSpacer_10">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -719,258 +804,18 @@ spacing-top:0px;</string>
  </resources>
  <connections>
   <connection>
-   <sender>btnTruth</sender>
+   <sender>btnCircuitSettings</sender>
    <signal>clicked(bool)</signal>
-   <receiver>frmTruth</receiver>
+   <receiver>frmAdvancedCircuitSettings</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>70</x>
-     <y>79</y>
+     <x>317</x>
+     <y>222</y>
     </hint>
     <hint type="destinationlabel">
-     <x>133</x>
-     <y>64</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnCircuit</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmCircuit</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>69</x>
-     <y>300</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>94</x>
-     <y>207</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnAlgebra</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmAlgebra</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>61</x>
-     <y>190</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>102</x>
-     <y>268</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnAnalyse</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmAnalyse</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>28</x>
-     <y>248</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>188</x>
-     <y>354</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnTruth</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmCircuit</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>64</x>
-     <y>93</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>121</x>
-     <y>178</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnTruth</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmAlgebra</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>55</x>
-     <y>118</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>240</x>
-     <y>263</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnTruth</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmAnalyse</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>80</x>
-     <y>103</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>357</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnAlgebra</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmTruth</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>43</x>
-     <y>173</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>354</x>
-     <y>72</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnAlgebra</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmAnalyse</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>18</x>
-     <y>174</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>395</x>
-     <y>351</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnAlgebra</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmCircuit</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>17</x>
-     <y>140</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>189</x>
-     <y>174</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnCircuit</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmAnalyse</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>37</x>
-     <y>324</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>308</x>
-     <y>363</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnCircuit</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmAlgebra</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>64</x>
-     <y>320</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>341</x>
-     <y>264</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnCircuit</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmTruth</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>18</x>
-     <y>305</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>375</x>
-     <y>65</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnAnalyse</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmAlgebra</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>13</x>
-     <y>229</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>389</x>
-     <y>263</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnAnalyse</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmCircuit</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>72</x>
-     <y>216</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>278</x>
-     <y>179</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnAnalyse</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>frmTruth</receiver>
-   <slot>setHidden(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>66</x>
-     <y>213</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>290</x>
-     <y>80</y>
+     <x>320</x>
+     <y>250</y>
     </hint>
    </hints>
   </connection>
