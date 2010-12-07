@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include <QGraphicsItemGroup>
 #include <QLine>
 #include <QPen>
 #include "gatebase.h"
@@ -29,6 +30,7 @@ private:
     uint testTruthIn;
     uint testTruthOut;
     QGraphicsScene* scene;
+    QGraphicsItemGroup* circuit;
     QList<CircuitLine*> lineList;
     EquationEditor* equationEditor;
 private slots:

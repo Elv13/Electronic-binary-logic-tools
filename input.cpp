@@ -22,6 +22,8 @@ Input::Input(QString text)
     inputName->setPos(5,15);
     inputName->setText(text);
     addToGroup(inputName);
+
+    content << inputItem;
 }
 
 void Input::createGate(uint inputCount)

@@ -35,11 +35,12 @@ MainWindow::MainWindow(QWidget *parent) :
     QPalette aPalette;
 
     ui->setupUi(this);
-
+    circuit = new QGraphicsItemGroup();
+    scene->addItem(circuit);
     equationEditor = new EquationEditor(ui->frmAlgebra);
     ui->frmAlgebra->layout()->addWidget(equationEditor);
 
-    ui->tabwMode->setVisible(false);
+    //ui->tabwMode->setVisible(false);
     ui->frmAlgebra->setVisible(false);
     ui->frmCircuit->setVisible(false);
     ui->frmAnalyse->setVisible(false);
@@ -48,11 +49,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->btnCircuit,SIGNAL(clicked(bool)),this,SLOT(modeCircuit()));
     connect(ui->btnAnalyse,SIGNAL(clicked(bool)),this,SLOT(modeAnalyse()));
     connect(ui->btnTruth,SIGNAL(clicked(bool)),this,SLOT(modeTruth()));
-    ui->verticalLayout_2->setContentsMargins(0,0,0,0);
+    //ui->verticalLayout_2->setContentsMargins(0,0,0,0);
 
     ui->graphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     generateTable(5,2);
-    connect(ui->btnGenerate,SIGNAL(clicked()),this,SLOT(updateEquations()));
+    //connect(ui->btnGenerate,SIGNAL(clicked()),this,SLOT(updateEquations()));
     connect(ui->spnInputNum,SIGNAL(valueChanged(int)),this,SLOT(resizeTable()));
     connect(ui->spnOutputNum,SIGNAL(valueChanged(int)),this,SLOT(resizeTable()));
 
@@ -160,6 +161,9 @@ MainWindow::MainWindow(QWidget *parent) :
         sideGroup->addToGroup(cbbValueProxy);
     }
     analyserScene->addItem(sideGroup);
+
+    //Draw a Karnaugh table
+    QGraphicsLineItem* aLine = new QGraphicsLineItem(grpKarnaugh);
 }
 
 MainWindow::~MainWindow()
@@ -169,7 +173,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::drawGate()
 {
-    QString testString("F=AB'C+A'B");
+    //Clear the old one, this apps is not resigned to edit anything, it is just to display it
+    foreach( QGraphicsItem *item, scene->items( circuit->boundingRect() ) ) {
+        if( item->group() == circuit ) {
+            circuit->removeFromGroup(item);
+            delete item;
+        }
+    }
+    lineList.clear();
+
     QStringList sum;
     QString tmp;
     QString output;
@@ -197,7 +209,7 @@ void MainWindow::drawGate()
         QString inputName = ((QLineEdit*)ui->tblTruthTest->cellWidget(0,i))->text();
         inputs[inputName] = new Input(inputName);
         inputs[inputName]->setPos(0,yInOfsset*(i+1));
-        scene->addItem(inputs[inputName]);
+        circuit->addToGroup(inputs[inputName]);
     }
 
     //QStringList equations = ui->txtAlgebra->toPlainText().replace(QChar(0x2029),QString("\n")).split("\n");
@@ -227,15 +239,16 @@ void MainWindow::drawGate()
         sum << tmp;
         tmp.clear();
 
-        //Could have some recursing here
+        //Could have some recursivity here
+        //auto function = [&](int x, int y) { return x + y; }
         int yOfsset = 0;
         foreach(QString aSum,sum) {
             AndGate* aGate3 = new AndGate(this,2);
             aGate3->setPos(150,yOfsset+=50);
-            scene->addItem(aGate3);
+            circuit->addToGroup(aGate3);
             for (int i=0;i<aSum.count();i++) {
                 if (aSum[i] != '\'')
-                    scene->addItem(connectGates(inputs[ QString(aSum[i]) ],aGate3,(i < aSum.count() && aSum[i+1]!='\'')?false:true));
+                    circuit->addToGroup(connectGates(inputs[ QString(aSum[i]) ],aGate3,(i < aSum.count() && aSum[i+1]!='\'')?false:true));
             }
         }
     }
@@ -261,9 +274,9 @@ void MainWindow::generateTable(uint input, uint output)
     ui->tblTruthTest->horizontalHeader()->hide();
     ui->tblTruthTest->setVerticalHeaderItem(0, new QTableWidgetItem(""));
 
-    for (int i=0; i < lines; i++) {
+    for (uint i=0; i < lines; i++) {
         int tmp = 16;
-        for (int j =0;j < input;j++ ) {
+        for (uint j =0;j < input;j++ ) {
             QTableWidgetItem* newItem = new QTableWidgetItem(QString::number(!!(i&tmp))); //locic_not * logic_not * i binary_or tmp = 1 or 0
             newItem->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled|Qt::ItemIsSelectable);
             newItem->setTextAlignment(Qt::AlignCenter);
@@ -272,7 +285,7 @@ void MainWindow::generateTable(uint input, uint output)
         }
 
         if (output > 0) {
-            for (int out=0; out < output; out++) {
+            for (uint out=0; out < output; out++) {
                 QComboBox* cbbAValue = new QComboBox();
                 cbbAValue->addItems(possibilities);
                 ui->tblTruthTest->setCellWidget(i+1,out+input,cbbAValue);
@@ -283,7 +296,7 @@ void MainWindow::generateTable(uint input, uint output)
         ui->tblTruthTest->setVerticalHeaderItem(i+1,header);
     }
 
-    for (int i =0; i< input+output;i++) {
+    for (uint i =0; i< input+output;i++) {
         ui->tblTruthTest->setColumnWidth(i,40);
         QLineEdit* aLineEdit = new QLineEdit(this);
         aLineEdit->setText({((char)i)+0x41}); //Little trick to make an alphebetical counter
@@ -298,12 +311,12 @@ void MainWindow::updateEquations()
     ui->txtOutTest->clear();
     QHash<int,QString> output;
 
-    for (int lines=1;lines<ui->tblTruthTest->rowCount();lines++) {
-        for (int out =0; out < testTruthOut;out++) {
+    for (uint lines=1;lines<ui->tblTruthTest->rowCount();lines++) {
+        for (uint out =0; out < testTruthOut;out++) {
             QString value = ((QComboBox*)ui->tblTruthTest->cellWidget(lines,out+testTruthIn))->currentText();
             if (value == "1") {
                 output[out] += " + ";
-                for (int input=0;input<testTruthIn;input++) {
+                for (uint input=0;input<testTruthIn;input++) {
                     output[out] += ((QLineEdit*)ui->tblTruthTest->cellWidget(0,input))->text()+ QString((ui->tblTruthTest->item(lines,input)->text().toInt())?"":"'");
                 }
             }
@@ -321,7 +334,7 @@ void MainWindow::resizeTable()
     if (ui->spnOutputNum->value()<testTruthOut) {
         QStringList outList;
         bool ok;
-        for (int out =0; out < testTruthOut;out++)
+        for (uint out =0; out < testTruthOut;out++)
             outList << (((QLineEdit*)ui->tblTruthTest->cellWidget(0,testTruthIn+out))->text());
         QString item = QInputDialog::getItem(this, tr("QInputDialog::getItem()"), tr("You are about to delete an output, all data from this output will be lost.\nSelect the desired output:"), outList, 0, false, &ok);
 
@@ -331,7 +344,7 @@ void MainWindow::resizeTable()
     else if (ui->spnInputNum->value()<testTruthIn) {
         QStringList inList;
         bool ok;
-        for (int in =0; in < testTruthIn;in++)
+        for (uint in =0; in < testTruthIn; in++)
             inList << (((QLineEdit*)ui->tblTruthTest->cellWidget(0,in))->text());
         QString item = QInputDialog::getItem(this, tr("QInputDialog::getItem()"), tr("You are about to delete an input, all data from this input will be lost.\nSelect the desired input:"), inList, 0, false, &ok);
 

@@ -16,6 +16,7 @@ void OrGate::createGate(uint inputCount)
     orGate->setPen(gatePen);
     orGate->setBrush(gateColor);
     addToGroup(orGate);
+    content << orGate;
 }
 
 QPoint OrGate::outputRelCoord()
@@ -32,6 +33,7 @@ QPoint OrGate::addInput(bool invert)
         anInverter->setPen(gatePen);
         anInverter->setBrush(gateColor);
         addToGroup(anInverter);
+        content << anInverter;
     }
     inputCount++;
     return QPoint(0,(inputCount-1)*10);

@@ -2,6 +2,8 @@
 #define GATEBASE_H
 
 #include <QGraphicsItemGroup>
+#include <QGraphicsSceneHoverEvent>
+#include <QGraphicsLineItem>
 #include <QColor>
 #include <QPen>
 #include <QObject>
@@ -21,12 +23,18 @@ public:
     virtual QPoint outputRelCoord() {}
     virtual QString getEquation() {}
     QPoint addParentGate(GateBase* gate, bool invert);
+    void addConnectedLine(QGraphicsLineItem* aLine);
 
 protected:
     virtual QPoint addInput(bool invert = false) {}
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
     QColor gateColor;
     QPen gatePen;
+    QPen gatePenHighlight;
     QList<ParentGates> parent;
+    QList<QGraphicsLineItem*> connectedLines;
+    QList<QAbstractGraphicsShapeItem*> content;
 private:
     virtual void createGate(uint inputCount) {}
 

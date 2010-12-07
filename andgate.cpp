@@ -21,6 +21,7 @@ void AndGate::createGate(uint inputCount)
     andGate->setBrush(gateColor);
 
     addToGroup(andGate);
+    content << andGate;
 }
 
 QPoint AndGate::outputRelCoord()
@@ -37,6 +38,7 @@ QPoint AndGate::addInput(bool invert)
         anInverter->setPen(gatePen);
         anInverter->setBrush(gateColor);
         addToGroup(anInverter);
+        content << anInverter;
     }
     inputCount++;
     return QPoint(0,(inputCount-1)*10);

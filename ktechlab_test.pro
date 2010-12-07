@@ -6,7 +6,7 @@ TEMPLATE = app
 TARGET = 
 DEPENDPATH += .
 INCLUDEPATH += .
-
+QMAKE_CXXFLAGS += -std=c++0x
 # Input
 HEADERS += andgate.h gatebase.h logicsimplifier.h mainwindow.h orgate.h \
     input.h \

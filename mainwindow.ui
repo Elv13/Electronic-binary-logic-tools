@@ -7,14 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>740</width>
-    <height>551</height>
+    <height>679</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout_2">
+   <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -42,7 +42,7 @@
       </item>
      </layout>
     </item>
-    <item row="1" column="0" rowspan="4">
+    <item row="1" column="0" rowspan="5">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QToolButton" name="btnTruth">
@@ -192,14 +192,50 @@ spacing:0px;</string>
        </widget>
       </item>
       <item>
+       <widget class="QToolButton" name="btnVHDL">
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>70</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string>padding-top:0px;
+padding-bottom:0px;
+margin-top:0px;
+margin-bottom:0px;
+spacing:0px;</string>
+        </property>
+        <property name="text">
+         <string>VHDL</string>
+        </property>
+        <property name="icon">
+         <iconset resource="ressources.qrc">
+          <normaloff>:/sideIcon/applications-development.png</normaloff>:/sideIcon/applications-development.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>20</width>
-          <height>40</height>
+          <width>77</width>
+          <height>91</height>
          </size>
         </property>
        </spacer>
@@ -263,194 +299,6 @@ spacing:0px;</string>
         </widget>
        </item>
       </layout>
-     </widget>
-    </item>
-    <item row="1" column="2" rowspan="5">
-     <widget class="QTabWidget" name="tabwMode">
-      <property name="currentIndex">
-       <number>3</number>
-      </property>
-      <widget class="QWidget" name="tabAnalyser">
-       <attribute name="title">
-        <string>Analyser</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout"/>
-      </widget>
-      <widget class="QWidget" name="tabTable">
-       <attribute name="title">
-        <string>Truth Table</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
-          <item>
-           <widget class="QLabel" name="lblDelayTable">
-            <property name="text">
-             <string>Delay</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="spnDelayTable">
-            <property name="suffix">
-             <string>ms</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnReverseTable">
-            <property name="text">
-             <string>Reverse engeneer</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QTableWidget" name="tblTruth"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tabAlgebra">
-       <attribute name="title">
-        <string>Algebra</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_5">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
-          <item>
-           <widget class="QLabel" name="lblDelayAlgebra">
-            <property name="text">
-             <string>Delay</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="spnDelayAlgebra">
-            <property name="suffix">
-             <string>ms</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnReverseAlgebra">
-            <property name="text">
-             <string>Reverse engeneer</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_6">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QTextBrowser" name="txtAlgebra"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tabCircuit">
-       <attribute name="title">
-        <string>Combinatory logic</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_7">
-          <item>
-           <widget class="QLabel" name="lblDelayCircuit">
-            <property name="text">
-             <string>Delay</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="spnDelayCircuit">
-            <property name="suffix">
-             <string>ms</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnReverseCircuit">
-            <property name="text">
-             <string>Reverse engeneer</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QGraphicsView" name="graCircuit"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tabTest">
-       <attribute name="title">
-        <string>Page</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout_9">
-          <item>
-           <spacer name="horizontalSpacer_9">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnGenerate">
-            <property name="text">
-             <string>Generate circuit</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
      </widget>
     </item>
     <item row="2" column="1">
@@ -579,7 +427,7 @@ spacing:0px;</string>
       </layout>
      </widget>
     </item>
-    <item row="4" column="1">
+    <item row="5" column="1">
      <widget class="QFrame" name="frmAnalyse">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -699,7 +547,7 @@ spacing:0px;</string>
       </layout>
      </widget>
     </item>
-    <item row="5" column="0" colspan="2">
+    <item row="6" column="0" colspan="2">
      <widget class="QFrame" name="frmIOMode">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -772,6 +620,21 @@ spacing:0px;</string>
           </size>
          </property>
         </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QFrame" name="frmVHDL">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QGraphicsView" name="graVHDL"/>
        </item>
       </layout>
      </widget>
