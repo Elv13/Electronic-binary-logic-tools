@@ -30,6 +30,7 @@ private:
     uint testTruthIn;
     uint testTruthOut;
     QGraphicsScene* scene;
+    QGraphicsScene* kmapScene;
     QGraphicsItemGroup* circuit;
     QList<CircuitLine*> lineList;
     EquationEditor* equationEditor;
@@ -40,6 +41,7 @@ private slots:
     void modeAnalyse();
     void modeCircuit();
     void modeAlgebra();
+    void modeVHDL();
 };
 
 #endif // MAINWINDOW_H

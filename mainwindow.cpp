@@ -26,6 +26,7 @@
 #include "orgate.h"
 #include "input.h"
 #include "circuitline.h"
+#include "logicsimplifier.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -44,10 +45,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->frmAlgebra->setVisible(false);
     ui->frmCircuit->setVisible(false);
     ui->frmAnalyse->setVisible(false);
+    ui->frmVHDL->setVisible(false);
     ui->frmAdvancedCircuitSettings->setVisible(false);
     connect(ui->btnAlgebra,SIGNAL(clicked(bool)),this,SLOT(modeAlgebra()));
     connect(ui->btnCircuit,SIGNAL(clicked(bool)),this,SLOT(modeCircuit()));
     connect(ui->btnAnalyse,SIGNAL(clicked(bool)),this,SLOT(modeAnalyse()));
+    connect(ui->btnVHDL,SIGNAL(clicked(bool)),this,SLOT(modeVHDL()));
     connect(ui->btnTruth,SIGNAL(clicked(bool)),this,SLOT(modeTruth()));
     //ui->verticalLayout_2->setContentsMargins(0,0,0,0);
 
@@ -163,7 +166,63 @@ MainWindow::MainWindow(QWidget *parent) :
     analyserScene->addItem(sideGroup);
 
     //Draw a Karnaugh table
-    QGraphicsLineItem* aLine = new QGraphicsLineItem(grpKarnaugh);
+    kmapScene = new QGraphicsScene(this);
+    ui->graVHDL->setScene(kmapScene);
+
+    QGraphicsItemGroup* grpKarnaugh = new QGraphicsItemGroup();
+    int variableCount = 4;
+    char *truthTable[] = {"0","1","2","3","4","5","1","1","1","1","1","1","1","1","1","1"};
+
+    QGraphicsLineItem* aLine3 = new QGraphicsLineItem(grpKarnaugh);
+    aLine3->setLine(0,0,25,25);
+    grpKarnaugh->addToGroup(aLine3);
+
+    for (int i=0;i<((variableCount/2 + variableCount%2)*2 + 1)*50;i+=50) {
+        QGraphicsLineItem* aLine2 = new QGraphicsLineItem(grpKarnaugh);
+        aLine2->setLine(i+25,25,i+25,(variableCount == 4)?225:125);
+        grpKarnaugh->addToGroup(aLine2);
+        QGraphicsSimpleTextItem* colName = new QGraphicsSimpleTextItem;
+        colName->setPos(i+25,0);
+        colName->setText(LogicSimplifier::dec2bin(LogicSimplifier::greyCodeGenerator(i/50),1));
+        grpKarnaugh->addToGroup(colName);
+    }
+
+    for (int i=0;i<((variableCount == 4)?5:3)*50;i+=50) {
+        QGraphicsLineItem* aLine2 = new QGraphicsLineItem(grpKarnaugh);
+        aLine2->setLine(25,i+25,(variableCount >= 3)?225:125,i+25);
+        grpKarnaugh->addToGroup(aLine2);
+
+        QGraphicsSimpleTextItem* rowName = new QGraphicsSimpleTextItem;
+        rowName->setPos(0,i+25);
+        rowName->setText(LogicSimplifier::dec2bin(LogicSimplifier::greyCodeGenerator(i/50),1));
+        grpKarnaugh->addToGroup(rowName);
+    }
+
+    for (int i=0;i<1<<variableCount;i++) {
+        QGraphicsSimpleTextItem* value = new QGraphicsSimpleTextItem;
+        value->setText(QString("t")+truthTable[LogicSimplifier::greyCodeGenerator(i)]);
+
+        QGraphicsSimpleTextItem* rowName = new QGraphicsSimpleTextItem;
+        if (i/variableCount %2) {
+            rowName->setPos(i/variableCount * 50 + 25,(((variableCount == 4)?3:1)-i%variableCount) * 50 + 25);
+            value->setPos(i/variableCount * 50 + 45,(((variableCount == 4)?3:1)-i%variableCount) * 50 + 45);
+        }
+        else {
+            rowName->setPos(i/variableCount * 50 + 25,i%variableCount * 50 + 25);
+            value->setPos(i/variableCount * 50 + 45,i%variableCount * 50 + 45);
+        }
+        rowName->setText(QString::number(LogicSimplifier::greyCodeGenerator(i)));
+        grpKarnaugh->addToGroup(rowName);
+        grpKarnaugh->addToGroup(value);
+
+    }
+
+    for (int i=0;i<16;i++) {
+        qDebug() << "(" << i << ")" << LogicSimplifier::dec2bin(LogicSimplifier::greyCodeGenerator(i),3);
+    }
+
+    kmapScene->addItem(grpKarnaugh);
+
 }
 
 MainWindow::~MainWindow()
@@ -429,10 +488,12 @@ void MainWindow::modeTruth()
     ui->frmAlgebra->setVisible(false);
     ui->frmCircuit->setVisible(false);
     ui->frmAnalyse->setVisible(false);
+    ui->frmVHDL->setVisible(false);
 
     ui->btnAlgebra->setChecked(false);
     ui->btnCircuit->setChecked(false);
     ui->btnAnalyse->setChecked(false);
+    ui->btnVHDL->setChecked(false);
 }
 
 void MainWindow::modeAnalyse()
@@ -441,10 +502,12 @@ void MainWindow::modeAnalyse()
     ui->frmAlgebra->setVisible(false);
     ui->frmCircuit->setVisible(false);
     ui->frmAnalyse->setVisible(true);
+    ui->frmVHDL->setVisible(false);
 
     ui->btnTruth->setChecked(false);
     ui->btnAlgebra->setChecked(false);
     ui->btnCircuit->setChecked(false);
+    ui->btnVHDL->setChecked(false);
 }
 
 void MainWindow::modeCircuit()
@@ -453,10 +516,28 @@ void MainWindow::modeCircuit()
     ui->frmAlgebra->setVisible(false);
     ui->frmCircuit->setVisible(true);
     ui->frmAnalyse->setVisible(false);
+    ui->frmVHDL->setVisible(false);
+
+    ui->btnTruth->setChecked(false);
+    ui->btnAlgebra->setChecked(false);
+    ui->btnVHDL->setChecked(false);
+    ui->btnAnalyse->setChecked(false);
+    updateEquations();
+
+}
+
+void MainWindow::modeVHDL()
+{
+    ui->frmTruth->setVisible(false);
+    ui->frmAlgebra->setVisible(false);
+    ui->frmCircuit->setVisible(false);
+    ui->frmAnalyse->setVisible(false);
+    ui->frmVHDL->setVisible(true);
 
     ui->btnTruth->setChecked(false);
     ui->btnAlgebra->setChecked(false);
     ui->btnAnalyse->setChecked(false);
+    ui->btnVHDL->setChecked(false);
     updateEquations();
 
 }
@@ -471,6 +552,7 @@ void MainWindow::modeAlgebra()
     ui->btnTruth->setChecked(false);
     ui->btnCircuit->setChecked(false);
     ui->btnAnalyse->setChecked(false);
+    ui->btnVHDL->setChecked(true);
     updateEquations();
     drawGate();
 }
