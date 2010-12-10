@@ -171,7 +171,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QGraphicsItemGroup* grpKarnaugh = new QGraphicsItemGroup();
     int variableCount = 4;
-    char *truthTable[] = {"0","1","2","3","4","5","1","1","1","1","1","1","1","1","1","1"};
+    char *truthTable[] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"};
 
     QGraphicsLineItem* aLine3 = new QGraphicsLineItem(grpKarnaugh);
     aLine3->setLine(0,0,25,25);
@@ -200,18 +200,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     for (int i=0;i<1<<variableCount;i++) {
         QGraphicsSimpleTextItem* value = new QGraphicsSimpleTextItem;
-        value->setText(QString("t")+truthTable[LogicSimplifier::greyCodeGenerator(i)]);
+        value->setText(QString("t")+truthTable[i]);
 
         QGraphicsSimpleTextItem* rowName = new QGraphicsSimpleTextItem;
-        if (i/variableCount %2) {
-            rowName->setPos(i/variableCount * 50 + 25,(((variableCount == 4)?3:1)-i%variableCount) * 50 + 25);
-            value->setPos(i/variableCount * 50 + 45,(((variableCount == 4)?3:1)-i%variableCount) * 50 + 45);
-        }
-        else {
-            rowName->setPos(i/variableCount * 50 + 25,i%variableCount * 50 + 25);
-            value->setPos(i/variableCount * 50 + 45,i%variableCount * 50 + 45);
-        }
-        rowName->setText(QString::number(LogicSimplifier::greyCodeGenerator(i)));
+
+        rowName->setPos(i/variableCount * 50 + 25,i%variableCount * 50 + 25);
+
+        value->setPos(LogicSimplifier::greyCodeGenerator(i/variableCount) *50 + 45,LogicSimplifier::greyCodeGenerator(i%variableCount) * 50 + 45);
+        rowName->setText(QString::number((LogicSimplifier::greyCodeGenerator(i/variableCount)<<2)|LogicSimplifier::greyCodeGenerator(i%variableCount)));
         grpKarnaugh->addToGroup(rowName);
         grpKarnaugh->addToGroup(value);
 
