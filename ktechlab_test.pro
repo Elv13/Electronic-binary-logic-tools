@@ -11,7 +11,8 @@ QMAKE_CXXFLAGS += -std=c++0x
 HEADERS += andgate.h gatebase.h logicsimplifier.h mainwindow.h orgate.h \
     input.h \
     circuitline.h \
-    equationeditor.h
+    equationeditor.h \
+    karnaugh.h
 FORMS += mainwindow.ui
 SOURCES += andgate.cpp \
            gatebase.cpp \
@@ -21,7 +22,8 @@ SOURCES += andgate.cpp \
            orgate.cpp \
     input.cpp \
     circuitline.cpp \
-    equationeditor.cpp
+    equationeditor.cpp \
+    karnaugh.cpp
 
 RESOURCES += \
     ressources.qrc

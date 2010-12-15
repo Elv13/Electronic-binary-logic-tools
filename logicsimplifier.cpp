@@ -23,7 +23,7 @@ unsigned int LogicSimplifier::greyCodeGenerator(unsigned pos)
 QString LogicSimplifier::dec2bin(uint input, unsigned length)
 {
     QString output;
-    for (int i=0;i< (length?length+1:(sizeof(int)*8));i++)
+    for (int i=0;i< (length?length:(sizeof(int)*8));i++)
         output = 0x30+((input>>i)&0x01) + output; //Push front (Bin to ascii)
     return output;
 }
